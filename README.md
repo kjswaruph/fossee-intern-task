@@ -12,8 +12,8 @@ This repository contains the complete documentation and resources for setting up
 
 ## Live Environment Access
 
-- **Droplet IP:**
-- **Keycloak Admin Console:**
+- **Droplet IP:** 139.59.68.14
+- **Keycloak Admin Console:** https://keycloak.swaruph.tech/admin/master/console/#/master
 - **Drupal Application:**
 - **Django Application:**
 - **PHP Application:**
