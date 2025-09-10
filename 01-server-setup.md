@@ -32,18 +32,18 @@ Create a new administrative user with sudo privileges:
 
 ```bash
 # Create the user and set a strong password
-adduser swaruph
-passwd swaruph
+adduser your_username
+passwd your_username
 
 # Add the user to the 'wheel' group to grant sudo access
-usermod -aG wheel swaruph
+usermod -aG wheel your_username
 ```
 
 Copy SSH key to the new user for secure access:
 
 ```bash
 # Copy SSH key for passwordless login
-rsync --archive --chown=swaruph:swaruph ~/.ssh /home/swaruph
+rsync --archive --chown=your_username:your_username ~/.ssh /home/swaruph
 ```
 
 Enhance security by disabling root SSH login. Modify `/etc/ssh/sshd_config` changing `PermitRootLogin yes` to `PermitRootLogin no`:
@@ -58,7 +58,10 @@ sudo vi /etc/ssh/sshd_config
 sudo systemctl restart sshd
 ```
 
-Verify new user access by logging out and reconnecting: `ssh swaruph@your_droplet_ip`
+Verify new user access by logging out and reconnecting: `ssh your_username@your_droplet_ip`
+
+![](./screenshots/01-images/ssh-login.png)
+_New user ssh login_
 
 **C. Firewall Configuration:**
 

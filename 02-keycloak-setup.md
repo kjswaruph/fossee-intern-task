@@ -193,18 +193,18 @@ Create /etc/httpd/conf.d/keycloak.conf
 Obtain certificates with certbot
 
 ```bash
-sudo certbot --apache -d keycloak.swaruph.tech
+sudo certbot --apache -d your_keycloak_domain
 ```
 
-This will generate keycloak-le-ssl.conf edit this
+This will generate keycloak-le-ssl.conf edit this it should look similar to this
 
 ```bash
 <VirtualHost *:443>
-    ServerName keycloak.swaruph.tech #Replace with your domain name
+    ServerName your_keycloak_domain #Replace with your domain name
 
     SSLEngine on
-    SSLCertificateFile /etc/letsencrypt/live/keycloak.swaruph.tech/fullchain.pem
-    SSLCertificateKeyFile /etc/letsencrypt/live/keycloak.swaruph.tech/privkey.pem
+    SSLCertificateFile /etc/letsencrypt/live/{your_keycloak_domain}/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/{your_keycloak_domain}/privkey.pem
     Include /etc/letsencrypt/options-ssl-apache.conf
 
     ProxyPreserveHost On
@@ -231,7 +231,9 @@ sudo systemctl restart keycloak
 ![php service status](./screenshots/02-images/services-status.png)
 _Service status verification_
 
-Now access https://your-domain.com and login with temporary admin credentials
+Now access https://your_keycloak_domain.com and login with temporary admin credentials
+
+![Keycloak login page](./screenshots/02-images/keycloak-login-page.png)
 
 Create a permanent admin user inside Keycloak.
 
