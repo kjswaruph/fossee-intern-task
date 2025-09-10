@@ -1,4 +1,6 @@
-# FOSSEE System Administrator Task - Digital Ocean & Keycloak SSO Setup
+# FOSSEE System Administrator Task
+
+> This repository contains my submission for the FOSSEE System Administration Internship Task 2025.
 
 ## Table of Contents
 
@@ -13,9 +15,9 @@ This repository contains the complete documentation and resources for setting up
 ## Live Environment Access
 
 - **Droplet IP:** 139.59.68.14
-- **Keycloak Admin Console:** https://keycloak.swaruph.tech/admin/master/console/#/master
-- **Drupal Application:**
-- **Django Application:**
+- **Keycloak Admin Console:** https://keycloak.swaruph.tech/
+- **Drupal Application:** https://drupal.swaruph.tech/
+- **Django Application:** https://django.swaruph.tech/
 - **PHP Application:**
 
 ## Documentation Files
@@ -23,7 +25,7 @@ This repository contains the complete documentation and resources for setting up
 | File                                                   | Description                                                                                       |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
 | [01-server-setup.md](./01-server-setup.md)             | Digital Ocean droplet creation and server setup steps including firewall and package installation |
-| [02-keycloak-setup.md](./02-keycloak-setup.md)         | // TO-DO                                                                                          |
-| [03-drupal-integration.md](./03-drupal-integration.md) | // TO-DO                                                                                          |
-| [04-django-integration.md](./04-django-integration.md) | // TO-DO                                                                                          |
+| [02-keycloak-setup.md](./02-keycloak-setup.md)         | Keycloak installation, MariaDB configuration and Apache reverse proxy with SSL                    |
+| [03-drupal-integration.md](./03-drupal-integration.md) | Drupal 11 installation and configuration with Keycloak SSO integration                            |
+| [04-django-integration.md](./04-django-integration.md) | Django application setup and integration with Keycloak SSO                                        |
 | [05-php-integration.md](./05-php-integration.md)       | // TO-DO                                                                                          |
