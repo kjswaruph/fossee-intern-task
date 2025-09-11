@@ -1,6 +1,6 @@
 # FOSSEE System Administrator Task
 
-> This repository contains my submission for the FOSSEE System Administration Internship Task 2025.
+> This repository contains my submission for the FOSSEE Semester Long Internship - Autumn 2025.
 
 ## Table of Contents
 
