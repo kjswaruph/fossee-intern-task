@@ -157,7 +157,7 @@ A. Create django client
 - Valid redirect URIs: https://your_django_domain/oidc/callback/
 - Save and copy the Client Secret from the credentials tab
 
-![django client configuration](./screenshots/04-images/django-client.png)
+![django client configuration](./screenshots/04-images/django-client-1.png)
 
 B. Update mysite/settings.py
 
@@ -172,11 +172,11 @@ AUTHENTICATION_BACKENDS = [
 OIDC_RP_CLIENT_ID = "django"
 OIDC_RP_CLIENT_SECRET = "your_client_secret"
 
-OIDC_OP_AUTHORIZATION_ENDPOINT = "https://{your_keycloak_domain}/realms/drupalSSO/protocol/openid-connect/auth"
-OIDC_OP_TOKEN_ENDPOINT = "https://{your_keycloak_domain}/realms/drupalSSO/protocol/openid-connect/token"
-OIDC_OP_USER_ENDPOINT = "https://{your_keycloak_domain}/realms/drupalSSO/protocol/openid-connect/userinfo"
+OIDC_OP_AUTHORIZATION_ENDPOINT = "https://{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/auth"
+OIDC_OP_TOKEN_ENDPOINT = "https://{your_keycloak_domain}/realms/sso-aps/protocol/openid-connect/token"
+OIDC_OP_USER_ENDPOINT = "https://{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/userinfo"
 OIDC_RP_SIGN_ALGO = "RS256"
-OIDC_OP_JWKS_ENDPOINT = "https://{your_keycloak_domain}/realms/drupalSSO/protocol/openid-connect/certs"
+OIDC_OP_JWKS_ENDPOINT = "https://{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/certs"
 
 
 LOGIN_URL = 'oidc_authentication_init'
