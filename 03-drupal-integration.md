@@ -111,7 +111,7 @@ Configure HTTPS virtual host
 sudo certbot --apache -d your_drupal_domain
 ```
 
-This will automatically create https virt host at /etc/httpd/conf.d/your_domain-le-ssl.conf
+This will automatically create https virt host at /etc/httpd/conf.d/drupal-le-ssl.conf
 Visit https://your_drupal_domain
 
 ## 3. Integrate SSO
@@ -145,20 +145,8 @@ sudo composer require 'drupal/miniorange_oauth_client'
 ### D. Configure Keycloak
 
 1. Visit keycloak admin console
-2. In the Keycloak Admin Console, go to **Manage realms > Create realm**.
-   - Enter realm name and click on Create button.
-3. Navigate to Manage > Users > Add user
-
-   - Turn email verified **on**
-   - Username: drupaluser
-   - Email: your_email
-   - First Name: your_first_name
-   - Last Name: your_last_name
-   - Click on Create button
-   - Open Credentials tab
-   - Click on Set password, enter you password and turn Temporary off and Save
-
-4. Navigate to Clients > Create Client
+2. In the Keycloak Admin Console, go to **Manage realms > sso-apps** and switch realm from master to sso-apps  .
+3. Navigate to Clients > Create Client
    - **General Setting:**
      - Client Type: OpenID Connect
      - Client ID: `drupal`
@@ -176,17 +164,16 @@ sudo composer require 'drupal/miniorange_oauth_client'
 2. Enter the following
    - Client ID: drupal
    - Client Secret: Paste the copied Client Secret from Keycloak Drupal Client Tab here
-   - Authorization Endpoint: {Keycloak Base URL}/realms/{realm-name}/protocol/openid-connect/auth
-   - Token Endpoint: {Keycloak Base URL}/realms/{realm-name}/protocol/openid-connect/token
-   - UserInfo Endpoint: {Keycloak Base URL}/realms/{realm-name}/protocol/openid-connect/userinfo
-   - For the above three replace {Keycloak base URL} with your Keycloak domain example https://your_keycloak_domain/ and {realm-name} with the realm name you just created in Keycloak
-3. Now click on button Save Configuration.
+   - Authorization Endpoint: `{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/auth`
+   - Token Endpoint: `{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/token`
+   - UserInfo Endpoint: `{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/userinfo`
+   - For the above three replace `{your_keycloak_domain}` with your Keycloak domain example https://your_keycloak_domain/ and `{your_realm_name}` with the realm name you just created in 02-keycloak-setup.
+1. Now click on button Save Configuration.
 
 ### F. Test Configuration
 
 1. In your miniOrange OAuth Client Configuration, click on Perform Test Configuration
-2. You will be asked to sign in to your Keycloak administrator console, login using the username and password which you created in our new realm i.e drupaluser
-
+2. You will be asked to sign in to your Keycloak administrator console, login using the username sso-admin and password which you created in sso-apps realm
 3. After successfully login, you will be provided with a list of attributes that are received from Keycloak.
 4. Click on Configure mapping button, you will be redirected to Attribute Mapping tab and set
    Email Attribute: Email
@@ -194,9 +181,9 @@ sudo composer require 'drupal/miniorange_oauth_client'
    Click on save button
 
 **Note:** You should get preferred_username as drupaluser
-![Drupal User Login](./screenshots/03-images/test-configuration.png)
+![Drupal User Login](./screenshots/03-images/test-configuration-1.png)
 
-![Attribute Mapping](./screenshots/03-images/attribute-mapping.png)
+![Attribute Mapping](./screenshots/03-images/attribute-1.png)
 
 ### G. Perform SSO login
 

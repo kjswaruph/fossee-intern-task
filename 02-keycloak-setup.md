@@ -248,6 +248,25 @@ Create a permanent admin user inside Keycloak.
 
 ![Keycloak admin console](./screenshots/02-images/keycloak-admin-console.png)
 
+## 8. Create Realm 
+
+It is better to have a realm other than master for next steps
+- Go to Manage realms > Create realm
+- Enter realm name: sso-apps
+- Click on Create button
+- Now navigate to Manage > Users > Create new user
+- Email verified: on
+- Username: ssoadmin
+- Email: your_email
+- First name: your_first_name 
+- Last name: your_last_name
+- Click on Create button
+- Now open Credentials tab and click on Set password
+- Enter your password and disable temporary password and Save
+
+sso-apps realm will be used instead of master for all steps in upcoming guides
+
+
 **Next Steps:** Proceed with Drupal installation and configuration as documented in [03-drupal-integration.md](03-drupal-integration.md).
 
 ## References
