@@ -11,6 +11,7 @@ sudo chmod -R 755 /var/www/php_app
 ## 2. Create vhost for PHP app
 
 Create /etc/httpd/conf.d/php_app.conf
+
 ```conf
 <VirtualHost *:80>
     ServerName your_php_app_domain
@@ -23,9 +24,10 @@ Create /etc/httpd/conf.d/php_app.conf
 </VirtualHost>
 ```
 
-Enable SSL 
+Enable SSL
+
 ```bash
-sudo certbot --apache -d phpapp.swaruph.tech
+sudo certbot --apache -d your_php_app_domain
 ```
 
 This will generate /etc/httpd/conf.d/php_app-le-ssl.conf, it should look similar to this
@@ -49,6 +51,7 @@ This will generate /etc/httpd/conf.d/php_app-le-ssl.conf, it should look similar
 ```
 
 Restart Apache:
+
 ```bash
 sudo systemctl restart httpd
 sudo systemctl status httpd
@@ -57,19 +60,20 @@ sudo systemctl status httpd
 ## 3. Keycloak SSO integration
 
 Install php oidc library
+
 ```bash
 cd /var/www/php_app
 sudo composer require jumbojett/openid-connect-php
 ```
 
-Configure Keycloak client
-    - Open Keycloak Admin console
-    - Switch to your_realm
-    - Navigate to Manage > Clients > Create client
-    - Set client name: php-app
-    - Turn Client Authentication: on
-    - Valid redirect urls: https://your_php_app_domain/callback.php
-    - Save and copy Client Secret from Credentials tab
+Configure Keycloak client 
+- Open Keycloak Admin console 
+- Switch to sso-apps realm
+- Navigate to Manage > Clients > Create client 
+- Set client name: php-app 
+- Turn Client Authentication: on 
+- Valid redirect urls: https://your_php_app_domain/callback.php 
+- Save and copy Client Secret from Credentials tab
 
 ## 4. PHP Application files
 
@@ -105,13 +109,13 @@ use Jumbojett\OpenIDConnectClient;
 session_start();
 
 $oidc = new OpenIDConnectClient(
-    'https://your_keycloak_domain/realms/your_realm', // Keycloak provider URL
+    'https://{your_keycloak_domain}/realms/your_realm', // Keycloak provider URL
     'php-app',                                  // Client ID
     'your_client_secret'          // Client Secret
 );
 
-$oidc->setRedirectURL('https://phpapp.swaruph.tech/callback.php');
-$oidc->addScope(['openid', 'email', 'profile']);	
+$oidc->setRedirectURL('https://{your_php_app_domain}/callback.php');
+$oidc->addScope(['openid', 'email', 'profile']);
 
 // This triggers the authentication flow
 $oidc->authenticate();
@@ -127,12 +131,12 @@ use Jumbojett\OpenIDConnectClient;
 session_start();
 
 $oidc = new OpenIDConnectClient(
-    'https://keycloak.swaruph.tech/realms/drupalSSO',
+    'https://{your_keycloak_domain}/realms/drupalSSO',
     'php-app',
-    'your_client_secret' 
+    'your_client_secret'
 );
 
-$oidc->setRedirectURL('https://your_php_app_domain/callback.php');
+$oidc->setRedirectURL('https://{your_php_app_domain}/callback.php');
 $oidc->addScope(['openid', 'email', 'profile']);
 $oidc->authenticate();
 
@@ -165,7 +169,7 @@ logout.php
 session_start();
 session_destroy();
 
-$keycloak_logout = "https://keycloak.swaruph.tech/realms/drupalSSO/protocol/openid-connect/logout?redirect_uri=https://php.swaruph.tech/";
+$keycloak_logout = "https://{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/logout?redirect_uri=https://{your_php_app_domain}";
 
 header("Location: " . $keycloak_logout);
 exit();
@@ -177,9 +181,9 @@ exit();
 
 ![index](./screenshots/05-images/index.png)
 
-- You will be redirected to keycloak 
-![Keycloak redirect](./screenshots/05-images/redirect.png)
-- Enter your keycloak credentials 
+- You will be redirected to keycloak
+  ![Keycloak redirect](./screenshots/05-images/redirect.png)
+- Enter your keycloak credentials
 - You will be redirected to profile.php
 
 ![index](./screenshots/05-images/profile.png)

@@ -5,7 +5,7 @@
 ```bash
 sudo mysql -u root -p
 CREATE DATABASE djangodb;
-CREATE USER 'djangouser'@'localhost' IDENTIFIED BY 'another_secure_password';
+CREATE USER 'djangouser'@'localhost' IDENTIFIED BY 'your_secure_password';
 GRANT ALL PRIVILEGES ON djangodb.* TO 'djangouser'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
@@ -14,8 +14,9 @@ EXIT;
 ## 2. Set Up Django Project with Gunicorn
 
 Install python3-devel mariadb-devel and gcc for installation of mysqlclient
+
 ```bash
-# For mysqlclient 
+# For mysqlclient
 sudo dnf install python3-devel mariadb-devel gcc -y
 ```
 
@@ -30,7 +31,8 @@ source venv/bin/activate
 pip install django gunicorn mozilla-django-oidc mysqlclient
 ```
 
-Create project 
+Create project
+
 ```bash
 django-admin startproject mysite .
 ```
@@ -60,6 +62,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 ```
 
 Finish
+
 ```bash
 python manage.py collectstatic
 python manage.py migrate
@@ -73,7 +76,7 @@ Create `/etc/httpd/conf.d/django.conf`:
 
 ```conf
 <VirtualHost *:80>
-    ServerName django.swaruph.tech
+    ServerName your_django_domain
     ProxyPass / http://127.0.0.1:8000/
     ProxyPassReverse / http://127.0.0.1:8000/
 </VirtualHost>
@@ -84,32 +87,34 @@ Configure https
 ```bash
 sudo certbot --apache -d your_django_domain
 ```
-Certbot will generate /etc/httpd/conf.d/django-le-ssl.conf 
 
-Edit /etc/httpd/conf.d/django-le-ssl.conf  and this line `RequestHeader set X-Forwarded-Proto "https"`
+Certbot will generate /etc/httpd/conf.d/django-le-ssl.conf
+
+Edit /etc/httpd/conf.d/django-le-ssl.conf and this line `RequestHeader set X-Forwarded-Proto "https"`
 
 ```apache
 <IfModule mod_ssl.c>
 <VirtualHost *:443>
-    ServerName django.swaruph.tech
+    ServerName your_django_domain
 
     ProxyPreserveHost On
     ProxyPass / http://127.0.0.1:8000/
     ProxyPassReverse / http://127.0.0.1:8000/
-    
+
 	RequestHeader set X-Forwarded-Proto "https"
 
     ErrorLog /var/log/httpd/django_error.log
     CustomLog /var/log/httpd/django_access.log combined
 
-    SSLCertificateFile /etc/letsencrypt/live/django.swaruph.tech/fullchain.pem
-    SSLCertificateKeyFile /etc/letsencrypt/live/django.swaruph.tech/privkey.pem
+    SSLCertificateFile /etc/letsencrypt/live/your_django_domain/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/your_django_domain/privkey.pem
     Include /etc/letsencrypt/options-ssl-apache.conf
 </VirtualHost>
 </IfModule>
 ```
 
 Update /var/www/django_project/mysite/settings.py
+
 ```python
 # Enfore HTTPS
 SECURE_SSL_REDIRECT = True
@@ -117,6 +122,7 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ```
+
 ## 4. Create Gunicorn service
 
 ```conf
@@ -125,7 +131,7 @@ Description=Gunicorn for Django mysite
 After=network.target
 
 [Service]
-User=swaruph
+User=your_username
 Group=apache
 WorkingDirectory=/var/www/django_project
 Environment="PATH=/var/www/django_project/venv/bin"
@@ -150,6 +156,7 @@ sudo systemctl restart httpd
 ## 5. Integrate Keycloak SSO
 
 A. Create django client
+
 - Open keycloak admin console and go to Manage realms and switch to sso-apps realm
 - Manage > Clients > Create client
 - Client ID: django
@@ -181,7 +188,7 @@ OIDC_OP_LOGOUT_ENDPOINT = "https://{your_keycloak_domain}/realms/sso-apps/protoc
 OIDC_STORE_ID_TOKEN = True
 
 LOGIN_URL = 'oidc_authentication_init'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/profile/'
 LOGOUT_REDIRECT_URL = '/'
 
 ```
@@ -193,9 +200,11 @@ cd /var/www/django_project
 source venv/bin/activate
 python manage.py startapp home
 ```
+
 A new dir home will be created in django_project dir
 
 Open mysite/settings.py and add home app in INSTALLED_APPS
+
 ```python
 INSTALLED_APPS = [
 	# ..Existing apps..
@@ -204,6 +213,7 @@ INSTALLED_APPS = [
 ```
 
 Add view home/views.py
+
 ```python
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -225,7 +235,7 @@ def logout(request):
     django_logout(request)
     id_token = request.session.get('oidc_id_token')
     post_logout_redirect = request.build_absolute_uri(settings.LOGOUT_REDIRECT_URL)
-    
+
     if id_token:
         logout_url = (
             f"{settings.OIDC_OP_LOGOUT_ENDPOINT}"
@@ -244,37 +254,38 @@ Create home/templates/profile.html
 <!DOCTYPE html>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Django Profile</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Successful SSO login</h1>
     <p>Welcome, {{ user.get_username }} ({{ user.email }})</p>
     <form action="{% url 'logout' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
+      {% csrf_token %}
+      <button type="submit">Logout</button>
     </form>
-</body>
+  </body>
 </html>
 ```
 
 Create home/templates/login.html
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Django Login</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Login Page</h1>
     <a href="{% url 'oidc_authentication_init' %}">Login with SSO</a>
-</body>
+  </body>
 </html>
 ```
 
-Add home/urls.py 
+Add home/urls.py
 
 ```python
 from django.urls import path
@@ -284,7 +295,7 @@ urlpatterns = [
     path('', login, name='login'),
     path('profile/', profile, name='profile'),
     path('logout/', logout, name='logout'),
-    
+
 ]
 ```
 

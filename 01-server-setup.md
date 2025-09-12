@@ -43,7 +43,7 @@ Copy SSH key to the new user for secure access:
 
 ```bash
 # Copy SSH key for passwordless login
-rsync --archive --chown=your_username:your_username ~/.ssh /home/swaruph
+rsync --archive --chown=your_username:your_username ~/.ssh /home/your_username
 ```
 
 Enhance security by disabling root SSH login. Modify `/etc/ssh/sshd_config` changing `PermitRootLogin yes` to `PermitRootLogin no`:
