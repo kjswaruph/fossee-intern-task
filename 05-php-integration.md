@@ -66,13 +66,14 @@ cd /var/www/php_app
 sudo composer require jumbojett/openid-connect-php
 ```
 
-Configure Keycloak client 
-- Open Keycloak Admin console 
+Configure Keycloak client
+
+- Open Keycloak Admin console
 - Switch to sso-apps realm
-- Navigate to Manage > Clients > Create client 
-- Set client name: php-app 
-- Turn Client Authentication: on 
-- Valid redirect urls: https://your_php_app_domain/callback.php 
+- Navigate to Manage > Clients > Create client
+- Set client name: php-app
+- Turn Client Authentication: on
+- Valid redirect urls: https://your_php_app_domain/callback.php
 - Save and copy Client Secret from Credentials tab
 
 ## 4. PHP Application files
@@ -109,7 +110,7 @@ use Jumbojett\OpenIDConnectClient;
 session_start();
 
 $oidc = new OpenIDConnectClient(
-    'https://{your_keycloak_domain}/realms/your_realm', // Keycloak provider URL
+    'https://{your_keycloak_domain}/realms/sso-apps', // Keycloak provider URL
     'php-app',                                  // Client ID
     'your_client_secret'          // Client Secret
 );
@@ -131,7 +132,7 @@ use Jumbojett\OpenIDConnectClient;
 session_start();
 
 $oidc = new OpenIDConnectClient(
-    'https://{your_keycloak_domain}/realms/drupalSSO',
+    'https://{your_keycloak_domain}/realms/sso-apps',
     'php-app',
     'your_client_secret'
 );
