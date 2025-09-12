@@ -150,7 +150,7 @@ sudo systemctl restart httpd
 ## 5. Integrate Keycloak SSO
 
 A. Create django client
-- Open keycloak admin console and Navigate to the realm we created for drupal 
+- Open keycloak admin console and go to Manage realms and switch to sso-apps realm
 - Manage > Clients > Create client
 - Client ID: django
 - Client Authentication: on
@@ -177,7 +177,8 @@ OIDC_OP_TOKEN_ENDPOINT = "https://{your_keycloak_domain}/realms/sso-aps/protocol
 OIDC_OP_USER_ENDPOINT = "https://{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/userinfo"
 OIDC_RP_SIGN_ALGO = "RS256"
 OIDC_OP_JWKS_ENDPOINT = "https://{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/certs"
-
+OIDC_OP_LOGOUT_ENDPOINT = "https://{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/logout"
+OIDC_STORE_ID_TOKEN = True
 
 LOGIN_URL = 'oidc_authentication_init'
 LOGIN_REDIRECT_URL = '/'
@@ -197,49 +198,78 @@ A new dir home will be created in django_project dir
 Open mysite/settings.py and add home app in INSTALLED_APPS
 ```python
 INSTALLED_APPS = [
-    # ...
+	# ..Existing apps..
     'home',
 ]
 ```
 
 Add view home/views.py
 ```python
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout as django_logout
+from django.conf import settings
+import urllib.parse
 
 # Create your views here.
+def login(request):
+    return render(request, 'login.html')
 
 @login_required
-def home(request):
-    return render(request, 'home/index.html')
+def profile(request):
+    return render(request, 'profile.html')
+
+@login_required
+def logout(request):
+
+    django_logout(request)
+    id_token = request.session.get('oidc_id_token')
+    post_logout_redirect = request.build_absolute_uri(settings.LOGOUT_REDIRECT_URL)
+    
+    if id_token:
+        logout_url = (
+            f"{settings.OIDC_OP_LOGOUT_ENDPOINT}"
+            f"?id_token_hint={id_token}"
+            f"&post_logout_redirect_uri={urllib.parse.quote(post_logout_redirect)}"
+        )
+    else:
+        logout_url = post_logout_redirect
+    return redirect(logout_url)
+
 ```
 
-Create index.html in home/templates/home/
+Create home/templates/profile.html
 
-```bash
-mkdir home/templates/home/
+```html
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Django Profile</title>
+</head>
+<body>
+    <h1>Successful SSO login</h1>
+    <p>Welcome, {{ user.get_username }} ({{ user.email }})</p>
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+</body>
+</html>
 ```
 
-Now create a html file home/templates/home/index.html
-
+Create home/templates/login.html
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Django SSO</title>
+    <title>Django Login</title>
 </head>
 <body>
-    {% if user.is_authenticated %}
-        <h1>Successful SSO login</h1>
-        <p>Welcome, {{ user.get_username }} ({{ user.email }})</p>
-        <form action="{% url 'oidc_logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
-    {% else %}
-        <a href="{% url 'oidc_authentication_init' %}">Login with SSO</a>
-    {% endif %}
+    <h1>Login Page</h1>
+    <a href="{% url 'oidc_authentication_init' %}">Login with SSO</a>
 </body>
 </html>
 ```
@@ -248,10 +278,13 @@ Add home/urls.py
 
 ```python
 from django.urls import path
-from .views import home
+from .views import login, profile, logout
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('', login, name='login'),
+    path('profile/', profile, name='profile'),
+    path('logout/', logout, name='logout'),
+    
 ]
 ```
 
@@ -282,11 +315,13 @@ urlpatterns = [
     path('oidc/', include('mozilla_django_oidc.urls')),
     path('', include('home.urls')),
 ]
-
 ```
 
 ## 7. Perform SSO login
 
-Now visiting `https://your_django_domain` will redirect to **Keycloak login** (login with the user you created in new realm) and return to Django with the authenticated user session.
-
-![SSO Login](./screenshots/04-images/sso-successful-login.png)
+- Now visiting `https://your_django_domain` you will first get login page, Click on Login with SSO
+  ![Login page](./screenshots/04-images/login.png)
+- You will be redirected to keycloak , sign in with sso-admin user
+  ![](./screenshots/04-images/keycloak-login.png)
+- After sign in, you will be redirected back to django login page
+  ![SSO Login](./screenshots/04-images/sso.png)

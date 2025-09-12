@@ -1,4 +1,4 @@
-	# PHP Application Setup & SSO
+# PHP Application Setup & SSO
 
 ## 1. Setup PHP directory
 

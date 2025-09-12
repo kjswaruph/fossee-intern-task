@@ -91,13 +91,11 @@ Now visit http://your_drupal_domain.com and complete web installation
 2. Choose profile > Standard
 3. Verify requirements (This fails if apache is not given rw permissions , fix SELinux labels)
 4. Setup Database:
-
    - Database type: MySQL, MariaDB,...
    - Database name: drupaldb
    - Database username: drupaluser
    - Database password: your_secure_password
    - Save and continue
-
 5. Install site
 6. Configure site
 
@@ -105,7 +103,7 @@ After completing these steps you will get Drupal Dashboard
 
 ![Drupal Dashboard](./screenshots/03-images/drupal-homepage.png)
 
-Configure HTTPS virtual host
+Configure SSL
 
 ```bash
 sudo certbot --apache -d your_drupal_domain
@@ -118,7 +116,7 @@ Visit https://your_drupal_domain
 
 ### A. Install miniOrange OAuth Client module in your drupal directory (/var/www/drupal)
 
-The `drupal/miniorange_oauth_client` module is a well-maintained and actively supported OpenID Connect (OIDC) client that is fully compatible with Drupal 11 and recent versions of Keycloak. It is also widely documented in official Drupal guides. In contrast, the `drupal/keycloak` module is outdated, lacks support for the latest Drupal and Keycloak releases, and has several unresolved bugs.
+> The `drupal/keycloak` module is old, currently less maintained, has known bugs, and does not fully support the latest Drupal versions. The `drupal/miniorange_oauth_client` module is a well maintained and actively supported OIDC client that is fully compatible with Drupal 11 and recent versions of Keycloak. It is also widely documented and recommended in official Drupal guides.
 
 ```bash
 cd /var/www/drupal
@@ -167,7 +165,7 @@ sudo composer require 'drupal/miniorange_oauth_client'
    - Authorization Endpoint: `{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/auth`
    - Token Endpoint: `{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/token`
    - UserInfo Endpoint: `{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/userinfo`
-   - For the above three replace `{your_keycloak_domain}` with your Keycloak domain example https://your_keycloak_domain/ and `{your_realm_name}` with the realm name you just created in 02-keycloak-setup.
+   For the above three replace `{your_keycloak_domain}` with your Keycloak domain example https://your_keycloak_domain/ and `{your_realm_name}` with the realm name you just created in 02-keycloak-setup.
 1. Now click on button Save Configuration.
 
 ### F. Test Configuration

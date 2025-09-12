@@ -94,7 +94,7 @@ db-url=jdbc:mariadb://localhost:3306/keycloakdb
 proxy=edge
 proxy-headers=xforwarded
 
-hostname=keycloak.swaruph.tech #Replace with your domain name
+hostname=your_keycloak_domain
 http-enabled=true
 https-enabled=false
 http-port=8080
@@ -183,7 +183,7 @@ Create /etc/httpd/conf.d/keycloak.conf
 
 ```bash
 <VirtualHost *:80>
-    ServerName keycloak.swaruph.tech #Replace with your domain name
+    ServerName your_keycloak_domain 
 
     RewriteEngine On
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
@@ -244,21 +244,22 @@ Create a permanent admin user inside Keycloak.
 5. Enter your password
 6. Turn off temporary
 7. Now navigate to Role Mapping and click on Assign role > Realm roles and assign admin role
-8. Save and delete old admin user and relogin
+8. Save and relogin with new admin and delete old admin user.
 
 ![Keycloak admin console](./screenshots/02-images/keycloak-admin-console.png)
 
-## 8. Create Realm 
+## 8. Create Realm
 
 It is better to have a realm other than master for next steps
+
 - Go to Manage realms > Create realm
 - Enter realm name: sso-apps
 - Click on Create button
 - Now navigate to Manage > Users > Create new user
 - Email verified: on
-- Username: ssoadmin
+- Username: sso-admin
 - Email: your_email
-- First name: your_first_name 
+- First name: your_first_name
 - Last name: your_last_name
 - Click on Create button
 - Now open Credentials tab and click on Set password
@@ -266,10 +267,5 @@ It is better to have a realm other than master for next steps
 
 sso-apps realm will be used instead of master for all steps in upcoming guides
 
-
 **Next Steps:** Proceed with Drupal installation and configuration as documented in [03-drupal-integration.md](03-drupal-integration.md).
 
-## References
-
-- [Official Keycloak Documentation](https://www.keycloak.org/guides#server)
-- [Medium article](https://medium.com/@ed-roof-maker/how-to-install-keycloak-iam-in-rocky-linux-9-6-34bae6b657fa)

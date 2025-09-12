@@ -1,6 +1,6 @@
 # FOSSEE System Administrator Task
 
-> This repository contains my submission for the FOSSEE Semester Long Internship - Autumn 2025.
+> This repository is my submission for the FOSSEE Semester Long Internship - Autumn 2025.
 
 ## Table of Contents
 
@@ -10,7 +10,7 @@
 
 ## Project Overview
 
-This repository contains the complete documentation and resources for setting up secure, production ready Digital Ocean droplet running Rocky Linux 10, with Keycloak integrated for Single Sign-On (SSO). The server is configured to run Keycloak for Single Sign-On (SSO) integration with three applications: Drupal 11, a Django project, and a generic PHP application.
+This repository contains the complete documentation for setting up secure, production ready Digital Ocean droplet running Rocky Linux 10, with Keycloak integrated for Single Sign-On (SSO). The server is configured to run Keycloak for SSO integration with three applications Drupal 11, a Django project, and PHP application.
 
 ## Live Environment Access
 
@@ -21,6 +21,8 @@ This repository contains the complete documentation and resources for setting up
 - **PHP Application:** https://phpapp.swaruph.tech/
 
 ## Documentation Files
+
+The documentation contains placeholders like your_username, your_password, your_keycloak_domain, your_drupal_domain, etc. Replace them with your actual values.
 
 | File                                                   | Description                                                                                       |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
