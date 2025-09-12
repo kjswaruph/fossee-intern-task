@@ -328,6 +328,13 @@ urlpatterns = [
 ]
 ```
 
+Restart gunicorn service
+
+```bash
+sudo systemctl restart gunicorn
+sudo systemctl restart httpd
+```
+
 ## 7. Perform SSO login
 
 - Now visiting `https://your_django_domain` you will first get login page, Click on Login with SSO
@@ -336,3 +343,5 @@ urlpatterns = [
   ![](./screenshots/04-images/keycloak-login.png)
 - After sign in, you will be redirected back to django login page
   ![SSO Login](./screenshots/04-images/sso.png)
+
+**Next Steps:** Proceed with PHP App setup and configuration as documented in [05-php-integration.md](05-php-integration.md).

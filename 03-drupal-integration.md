@@ -143,7 +143,7 @@ sudo composer require 'drupal/miniorange_oauth_client'
 ### D. Configure Keycloak
 
 1. Visit keycloak admin console
-2. In the Keycloak Admin Console, go to **Manage realms > sso-apps** and switch realm from master to sso-apps  .
+2. In the Keycloak Admin Console, go to **Manage realms > sso-apps** and switch realm from master to sso-apps .
 3. Navigate to Clients > Create Client
    - **General Setting:**
      - Client Type: OpenID Connect
@@ -160,13 +160,16 @@ sudo composer require 'drupal/miniorange_oauth_client'
 
 1. Go to Drupal site
 2. Enter the following
+
    - Client ID: drupal
    - Client Secret: Paste the copied Client Secret from Keycloak Drupal Client Tab here
    - Authorization Endpoint: `{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/auth`
    - Token Endpoint: `{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/token`
    - UserInfo Endpoint: `{your_keycloak_domain}/realms/sso-apps/protocol/openid-connect/userinfo`
-   For the above three replace `{your_keycloak_domain}` with your Keycloak domain example https://your_keycloak_domain/ and `{your_realm_name}` with the realm name you just created in 02-keycloak-setup.
-1. Now click on button Save Configuration.
+
+     For the above three replace `{your_keycloak_domain}` with your Keycloak domain example https://your_keycloak_domain/ and `{your_realm_name}` with the realm name you just created in 02-keycloak-setup.
+
+3. Now click on button Save Configuration.
 
 ### F. Test Configuration
 
@@ -191,3 +194,5 @@ sudo composer require 'drupal/miniorange_oauth_client'
 4. On successful login, you will be logged in to Drupal .
 
 ![Drupal User Login](./screenshots/03-images/drupaluser-login.png)
+
+**Next Steps:** Proceed with Django installation and configuration as documented in [04-django-integration.md](04-django-integration.md).
