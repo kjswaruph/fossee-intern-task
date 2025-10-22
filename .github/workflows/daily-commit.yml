@@ -1,9 +1,9 @@
 name: Daily Empty Commit
 
 on:
-  schedule:
+#  schedule:
     # Runs every day at a specific time (e.g., 5:30 UTC)
-    - cron: "30 5 * * *"
+#    - cron: "30 5 * * *"
   workflow_dispatch: # Allows manual triggering from the Actions tab
 
 permissions:
